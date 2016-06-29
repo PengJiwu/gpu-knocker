@@ -1,6 +1,24 @@
+# build
 *.i
 *.ii
 *.gpu
 *.ptx
 *.cubin
 *.fatbin
+
+# IDE
+.project
+.cproject
+Debug/
+Release/
+
+# documentation
+doc/
+
+# data
+*.conf
+*.csv
+*.mps
+
+# temporary
+~
