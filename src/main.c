@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "gpuKnocker.h"
+#include "gpuKnocker.cuh"
 
 int main(int argc, char *argv[]) {
 	char *mps = "lpProblem.mps";
