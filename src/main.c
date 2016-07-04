@@ -9,9 +9,10 @@
 
 int main(int argc, char *argv[]) {
 	char *mps = "lpProblem.mps";
-	char *parameters = "parameter.conf";
 	char *target = "target.csv";
-	char *knockout = knock(mps, parameters, target);
+	char *parameter = "parameter.conf";
+
+	char *knockout = knock(mps, target, parameter);
 
 	printf("%s\n", knockout);
 	free(knockout);
