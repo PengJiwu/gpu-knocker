@@ -13,16 +13,18 @@
 #include "parameters.cuh"
 #include "statistics.cuh"
 
-char *knock(char *mps, char *target, const char * const parameter) {
+char *knock(char *mps, char *target, char *parameter) {
+	Parameters *parameters = createParameters();
+
+	parseParameters(parameter, mps, target, parameters);
+	if (parameters->isVerbose) {
+		printParameters(parameters);
+	}
+
 	cudaEvent_t custart, custop;
 	cudaCheck(cudaEventCreate(&custart));
 	cudaCheck(cudaEventCreate(&custop));
 	cudaCheck(cudaEventRecord(custart, 0));
-
-	Parameters *parameters = createParameters();
-
-	parseParameters(parameter, mps, target, parameters);
-	printParameters(parameters);
 
 	EvolutionaryAlgorithm *evolutionaryAlgorithm = createEvolutionaryAlgorithm(
 			parameters);
@@ -32,20 +34,27 @@ char *knock(char *mps, char *target, const char * const parameter) {
 	preprocessLPProblem(lpSolver, parameters);
 	char *knockouts = runEvolutionaryAlgorithm(evolutionaryAlgorithm, lpSolver,
 			statistics, parameters);
+	if (parameters->isVerbose) {
+		printStatistics(statistics, parameters);
+	}
 
 	deleteEvolutionaryAlgorithm(evolutionaryAlgorithm);
 	deleteLPSolver(lpSolver);
 	deleteStatistics(statistics);
 
-	deleteParameters(parameters);
-
 	cudaCheck(cudaEventRecord(custop, 0));
 	cudaCheck(cudaEventSynchronize(custop));
 	float elapsedTime;
 	cudaCheck(cudaEventElapsedTime(&elapsedTime, custart, custop));
-	printf("This took %3.1f ms.\n", elapsedTime);
+	if (parameters->isBenchmark) {
+		printf("%3.1f\n", elapsedTime);
+	} else {
+		printf("This took %3.1f ms.\n", elapsedTime);
+	}
 	cudaCheck(cudaEventDestroy(custart));
 	cudaCheck(cudaEventDestroy(custop));
+
+	deleteParameters(parameters);
 
 	return knockouts;
 }

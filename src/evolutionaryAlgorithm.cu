@@ -16,12 +16,12 @@ EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters) {
 			(EvolutionaryAlgorithm *) malloc(sizeof(EvolutionaryAlgorithm));
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->fitness,
-					parameters->individualSizeInt * parameters->populationSize
+					parameters->populationSize * parameters->islandAmount
 							* sizeof(uint32_t)));
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->population,
 					parameters->individualSizeInt * parameters->populationSize
-							* sizeof(uint32_t)));
+							* parameters->islandAmount * sizeof(uint32_t)));
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->rngState,
 					parameters->blockSize * parameters->gridSize
@@ -29,7 +29,7 @@ EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters) {
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->temporaryPopulation,
 					parameters->individualSizeInt * parameters->populationSize
-							* sizeof(uint32_t)));
+							* parameters->islandAmount * sizeof(uint32_t)));
 
 	return evolutionaryAlgorithm;
 }
@@ -43,17 +43,15 @@ void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm) {
 }
 
 void evaluatePopulation(LPSolver *lpSolver,
-		EvolutionaryAlgorithm *evolutionaryAlgorithm,
-		const Parameters * const parameters) {
-	printf("DUMMY evaluatePopulation\n");
+		EvolutionaryAlgorithm *evolutionaryAlgorithm, Parameters *parameters) {
+	// TODO implement
 	solveLP<<<parameters->gridSize, parameters->blockSize>>>(
 			evolutionaryAlgorithm->population, evolutionaryAlgorithm->fitness);
 }
 
 char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
-		LPSolver *lpSolver, Statistics *statistics,
-		const Parameters * const parameters) {
-	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(
+		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters) {
+	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(0,
 			evolutionaryAlgorithm->rngState);
 	createPopulation<<<parameters->gridSize, parameters->blockSize>>>(
 			evolutionaryAlgorithm->population, evolutionaryAlgorithm->rngState);
@@ -63,9 +61,10 @@ char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 			iteration++) {
 		// migration after specified interval
 		if ((iteration + 1) % parameters->migrationInterval == 0) {
-			migratePopulation<<<parameters->gridSize, parameters->blockSize>>>(
+			migratePopulation<<<parameters->gridSize, parameters->blockSize,
+					(parameters->migrationSize + 1) * sizeof(uint32_t)>>>(
 					evolutionaryAlgorithm->population,
-					statistics->iterationData, iteration);
+					evolutionaryAlgorithm->fitness, statistics->iterationData);
 		}
 
 		selectPopulation<<<parameters->gridSize, parameters->blockSize>>>(
@@ -74,18 +73,15 @@ char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 				evolutionaryAlgorithm->fitness,
 				evolutionaryAlgorithm->rngState);
 		crossoverPopulation<<<parameters->gridSize, parameters->blockSize>>>(
-				evolutionaryAlgorithm->population,
 				evolutionaryAlgorithm->temporaryPopulation,
 				evolutionaryAlgorithm->rngState);
+		mutatePopulation<<<parameters->gridSize, parameters->blockSize>>>(
+				evolutionaryAlgorithm->temporaryPopulation,
+				evolutionaryAlgorithm->rngState);
+
 		cudaDeviceSynchronize();
 		swapTemporaryPopulation(&evolutionaryAlgorithm->population,
 				&evolutionaryAlgorithm->temporaryPopulation);
-
-		mutatePopulation<<<parameters->gridSize, parameters->blockSize>>>(
-				evolutionaryAlgorithm->population,
-				evolutionaryAlgorithm->rngState);
-
-		cudaDeviceSynchronize();
 
 		evaluatePopulation(lpSolver, evolutionaryAlgorithm, parameters);
 		gatherStatistics(statistics, evolutionaryAlgorithm->fitness, iteration,

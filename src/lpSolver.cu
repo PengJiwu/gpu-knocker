@@ -20,7 +20,6 @@ void deleteLPSolver(LPSolver *lpSolver) {
 	free(lpSolver);
 }
 
-void preprocessLPProblem(LPSolver *lpSolver,
-		const Parameters * const parameters) {
-	printf("DUMMY preprocessLPProblem\n");
+void preprocessLPProblem(LPSolver *lpSolver, Parameters *parameters) {
+	// TODO implement
 }

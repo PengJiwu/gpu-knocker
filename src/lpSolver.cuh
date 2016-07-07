@@ -46,8 +46,7 @@ void deleteLPSolver(LPSolver *lpSolver);
  * @param lpSolver LPSolver.
  * @param parameters Parameters.
  */
-void preprocessLPProblem(LPSolver *lpSolver,
-		const Parameters * const parameters);
+void preprocessLPProblem(LPSolver *lpSolver, Parameters *parameters);
 
 #ifdef __cplusplus
 }

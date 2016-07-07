@@ -34,7 +34,7 @@ typedef struct Statistics {
  * @param parameters Parameters.
  * @return Initialized Statistics.
  */
-Statistics *createStatistics(const Parameters * const parameters);
+Statistics *createStatistics(Parameters *parameters);
 
 /**
  * Clears memory for Statistics.
@@ -44,6 +44,14 @@ Statistics *createStatistics(const Parameters * const parameters);
 void deleteStatistics(Statistics *statistics);
 
 /**
+ * Gathers statistics.
+ *
+ * @param fitness Fitness.
+ * @param statistics Statistics.
+ */
+__global__ void gatherKernel(float *fitness, float *statistics);
+
+/**
  * Gathers statistics for the iteration.
  *
  * @param statistics Statistics stored here.
@@ -51,8 +59,8 @@ void deleteStatistics(Statistics *statistics);
  * @param iteration Current iteration.
  * @param parameters Parameters.
  */
-void gatherStatistics(Statistics *statistics, const float * const fitness,
-		const uint32_t iteration, const Parameters * const parameters);
+void gatherStatistics(Statistics *statistics, float *fitness,
+		uint32_t iteration, Parameters *parameters);
 
 /**
  * Prints statistics to console.
@@ -60,8 +68,7 @@ void gatherStatistics(Statistics *statistics, const float * const fitness,
  * @param statistics Statistics to print.
  * @param parameters Parameters.
  */
-void printStatistics(const Statistics * const statistics,
-		const Parameters * const parameters);
+void printStatistics(Statistics *statistics, Parameters *parameters);
 
 #ifdef __cplusplus
 }

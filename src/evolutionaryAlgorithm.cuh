@@ -64,7 +64,7 @@ void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm);
  * @param parameters Parameters.
  */
 void evaluatePopulation(EvolutionaryAlgorithm *evolutionaryAlgorithm,
-		LPSolver *lpSolver, const Parameters * const parameters);
+		LPSolver *lpSolver, Parameters *parameters);
 
 /**
  * Starts the evolutionary algorithm.
@@ -76,8 +76,7 @@ void evaluatePopulation(EvolutionaryAlgorithm *evolutionaryAlgorithm,
  * @return Returns knockouts and the achieved target values. Needs to be freed.
  */
 char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
-		LPSolver *lpSolver, Statistics *statistics,
-		const Parameters * const parameters);
+		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters);
 
 /**
  * Swaps pointer to population and temporary population.

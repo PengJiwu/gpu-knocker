@@ -23,6 +23,7 @@ Parameters *createParameters() {
 	parameters->migrationInterval = 10000;
 	parameters->migrationSize = 5;
 	parameters->mutationRate = 0.2f;
+	parameters->mutationStrength = 1;
 	parameters->populationSize = 100;
 	parameters->selectionRate = 0.3f;
 	parameters->tournamentSize = 5;
@@ -48,8 +49,8 @@ void deleteParameters(Parameters *parameters) {
 	free(parameters);
 }
 
-void parseParameters(const char * const parameter, const char * const mps,
-		const char * const target, Parameters *parameters) {
+void parseParameters(char *parameter, char *mps, char *target,
+		Parameters *parameters) {
 	FILE *parameterFile;
 
 	parameterFile = fopen(parameter, "r");
@@ -82,6 +83,8 @@ void parseParameters(const char * const parameter, const char * const mps,
 				parameters->migrationSize = atoi(value);
 			} else if (strcmp(key, "mutationRate") == 0) {
 				parameters->mutationRate = atof(value);
+			} else if (strcmp(key, "mutationStrength") == 0) {
+				parameters->mutationStrength = atof(value);
 			} else if (strcmp(key, "populationSize") == 0) {
 				parameters->populationSize = atoi(value);
 			} else if (strcmp(key, "selectionRate") == 0) {
@@ -125,7 +128,7 @@ void parseParameters(const char * const parameter, const char * const mps,
 					cudaMemcpyHostToDevice));
 }
 
-void printParameters(const Parameters * const parameters) {
+void printParameters(Parameters *parameters) {
 	printf(
 			"EAParameters: individualSize=%u individualSizeInt=%u islandAmount=%u iterationAmount=%u migrationInterval=%u migrationSize=%u mutationRate=%f populationSize=%u selectionRate=%f tournamentSize=%u\n",
 			parameters->individualSize, parameters->individualSizeInt,

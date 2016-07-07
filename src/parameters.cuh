@@ -29,7 +29,7 @@ typedef struct Parameters {
 	uint32_t individualSizeInt;
 
 	/**
-	 * Number of islands.
+	 * Number of islands. Should be an integer multiple of gridSize.
 	 */
 	uint32_t islandAmount;
 
@@ -54,7 +54,12 @@ typedef struct Parameters {
 	float mutationRate;
 
 	/**
-	 * Size of a population.
+	 * Number of runs of mutation operator.
+	 */
+	uint32_t mutationStrength;
+
+	/**
+	 * Size of a population. Should be an integer multiple of blockSize.
 	 */
 	uint32_t populationSize;
 
@@ -83,17 +88,17 @@ typedef struct Parameters {
 	// GPU parameters
 
 	/**
-	 * Number of threads per block.
+	 * Number of threads per block. Should be an integer multiple of cores per multiprocessor.
 	 */
 	uint32_t blockSize;
 
 	/**
-	 * Number of blocks per grid.
+	 * Number of blocks per grid. Should be an integer multiple of multiprocessor count.
 	 */
 	uint32_t gridSize;
 
 	/**
-	 * Number of threads per warp.
+	 * Number of threads per warp. This is 32 on current CUDA architectures.
 	 */
 	uint32_t warpSize;
 
@@ -137,15 +142,15 @@ void deleteParameters(Parameters *parameters);
  * @param target CSV file to read target from.
  * @param parameter Parameters stored here.
  */
-void parseParameters(const char * const parameterFile, const char * const mps,
-		const char * const target, Parameters *parameters);
+void parseParameters(char *parameterFile, char *mps, char *target,
+		Parameters *parameters);
 
 /**
  * Prints parameters to console.
  *
  * @param parameters Parameters to print.
  */
-void printParameters(const Parameters * const parameters);
+void printParameters(Parameters *parameters);
 
 #ifdef __cplusplus
 }

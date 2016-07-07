@@ -17,7 +17,7 @@ extern "C" {
  * @param parameters File containing the parameters. Unspecified parameters will be set to default values.
  * @return Returns knockouts and the achieved target values. Needs to be freed.
  */
-char *knock(char *mps, char *target, const char * const parameter);
+char *knock(char *mps, char *target, char *parameter);
 
 #ifdef __cplusplus
 }

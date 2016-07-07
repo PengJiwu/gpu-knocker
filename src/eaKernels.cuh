@@ -16,6 +16,15 @@ extern "C" {
 #endif
 
 /**
+ * Flips a single bit
+ *
+ * @param gene Gene.
+ * @param rngState RNGState.
+ */
+__device__ void bitFlipMutation(uint32_t *gene,
+		curandStatePhilox4_32_10 *rngState);
+
+/**
  * Initializes population with random data.
  *
  * @param population Population to initialize.
@@ -31,25 +40,27 @@ __global__ void createPopulation(uint32_t *population,
  * @param population Temporary population.
  * @param rngState RNGState.
  */
-__global__ void crossoverPopulation(const uint32_t * const population,
-		uint32_t *temporaryPopulation, curandStatePhilox4_32_10 *rngState);
+__global__ void crossoverPopulation(uint32_t *population,
+		curandStatePhilox4_32_10 *rngState);
 
 /**
  * Initializes population with random data.
  *
+ * @param seed Seed for random number generator.
  * @param state State of random number generator to initialize.
  */
-__global__ void initializeRNG(curandStatePhilox4_32_10 *rngState);
+__global__ void initializeRNG(uint32_t seed,
+		curandStatePhilox4_32_10 *rngState);
 
 /**
  * Migrates individuals between islands.
  *
  * @param population Population.
- * @param statistics Statistics
- * @param iteration Iteration.
+ * @param fitness Fitness.
+ * @param statistics Statistics.
  */
-__global__ void migratePopulation(uint32_t *population,
-		const float * const statistics, uint32_t iteration);
+__global__ void migratePopulation(uint32_t *population, float *fitness,
+		float *statistics);
 
 /**
  * Mutates some individuals of the population.
@@ -68,9 +79,33 @@ __global__ void mutatePopulation(uint32_t *population,
  * @param fitness Fitness.
  * @param rngState RNGState.
  */
-__global__ void selectPopulation(const uint32_t * const population,
-		uint32_t *temporaryPopulation, const float * const fitness,
+__global__ void selectPopulation(uint32_t *population,
+		uint32_t *temporaryPopulation, float *fitness,
 		curandStatePhilox4_32_10 *rngState);
+
+/**
+ * Selects individual by tournament selection.
+ *
+ * @param population Population.
+ * @param temporaryPopulation TemporaryPopulation.
+ * @param fitness Fitness.
+ * @param island Island.
+ * @param individual Individual.
+ * @param rngState RNGState.
+ */
+__device__ void tournamentSelection(uint32_t *population,
+		uint32_t *temporaryPopulation, float *fitness, uint32_t island,
+		uint32_t individual, curandStatePhilox4_32_10 *rngState);
+
+/**
+ * Creates new individual by uniform crossover.
+ *
+ * @param population Population.
+ * @param temporaryPopulation TemporaryPopulation.
+ * @param rngState RNGState.
+ */
+__device__ void uniformCrossover(uint32_t *population, uint32_t island,
+		uint32_t individual, curandStatePhilox4_32_10 *rngState);
 
 #ifdef __cplusplus
 }
