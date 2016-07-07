@@ -1,5 +1,7 @@
 # build
+*.d
 *.i
+*.o
 *.ii
 *.gpu
 *.ptx
@@ -22,3 +24,6 @@ doc/
 
 # temporary
 ~
+
+# scripts
+*.sh
