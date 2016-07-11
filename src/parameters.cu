@@ -73,6 +73,7 @@ void parseParameters(char *parameter, char *mps, char *target,
 			// evolutionary algorithm parameters
 			if (strcmp(key, "individualSize") == 0) {
 				parameters->individualSize = atoi(value);
+				parameters->individualSizeInt = (parameters->individualSize + 31) / 32;
 			} else if (strcmp(key, "islandAmount") == 0) {
 				parameters->islandAmount = atoi(value);
 			} else if (strcmp(key, "iterationAmount") == 0) {
