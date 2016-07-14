@@ -17,21 +17,21 @@ char *knock(char *mps, char *target, char *parameter) {
 	Parameters *parameters = createParameters();
 
 	parseParameters(parameter, mps, target, parameters);
-	if (parameters->isVerbose) {
-		printParameters(parameters);
-	}
 
 	cudaEvent_t custart, custop;
 	cudaCheck(cudaEventCreate(&custart));
 	cudaCheck(cudaEventCreate(&custop));
 	cudaCheck(cudaEventRecord(custart, 0));
 
+	LPSolver *lpSolver = createLPSolver(parameters);
+	if (parameters->isVerbose) {
+		printParameters(parameters);
+	}
+
 	EvolutionaryAlgorithm *evolutionaryAlgorithm = createEvolutionaryAlgorithm(
 			parameters);
-	LPSolver *lpSolver = createLPSolver(parameters);
 	Statistics *statistics = createStatistics(parameters);
 
-	preprocessLPProblem(lpSolver, parameters);
 	char *knockouts = runEvolutionaryAlgorithm(evolutionaryAlgorithm, lpSolver,
 			statistics, parameters);
 	if (parameters->isVerbose) {

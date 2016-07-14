@@ -9,7 +9,6 @@
 
 #include "cudaCheck.cuh"
 #include "eaKernels.cuh"
-#include "lpKernels.cuh"
 
 EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters) {
 	EvolutionaryAlgorithm *evolutionaryAlgorithm =
@@ -42,20 +41,14 @@ void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm) {
 	free(evolutionaryAlgorithm);
 }
 
-void evaluatePopulation(LPSolver *lpSolver,
-		EvolutionaryAlgorithm *evolutionaryAlgorithm, Parameters *parameters) {
-	// TODO implement
-	solveLP<<<parameters->gridSize, parameters->blockSize>>>(
-			evolutionaryAlgorithm->population, evolutionaryAlgorithm->fitness);
-}
-
 char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters) {
 	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(0,
 			evolutionaryAlgorithm->rngState);
 	createPopulation<<<parameters->gridSize, parameters->blockSize>>>(
 			evolutionaryAlgorithm->population, evolutionaryAlgorithm->rngState);
-	evaluatePopulation(lpSolver, evolutionaryAlgorithm, parameters);
+	evaluatePopulation(evolutionaryAlgorithm->population,
+			evolutionaryAlgorithm->fitness, lpSolver, parameters);
 
 	for (uint32_t iteration = 0; iteration < parameters->iterationAmount;
 			iteration++) {
@@ -83,7 +76,8 @@ char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		swapTemporaryPopulation(&evolutionaryAlgorithm->population,
 				&evolutionaryAlgorithm->temporaryPopulation);
 
-		evaluatePopulation(lpSolver, evolutionaryAlgorithm, parameters);
+		evaluatePopulation(evolutionaryAlgorithm->population,
+				evolutionaryAlgorithm->fitness, lpSolver, parameters);
 		gatherStatistics(statistics, evolutionaryAlgorithm->fitness, iteration,
 				parameters);
 	}

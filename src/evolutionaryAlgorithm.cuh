@@ -57,16 +57,6 @@ EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters);
 void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm);
 
 /**
- * Evaluates all individuals.
- *
- * @param evolutionaryAlgorithm EvolutionaryAlgorithm.
- * @param lpSolver LPSolver.
- * @param parameters Parameters.
- */
-void evaluatePopulation(EvolutionaryAlgorithm *evolutionaryAlgorithm,
-		LPSolver *lpSolver, Parameters *parameters);
-
-/**
  * Starts the evolutionary algorithm.
  *
  * @param evolutionaryAlgorithm EvolutionaryAlgorithm.

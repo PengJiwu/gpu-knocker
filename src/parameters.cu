@@ -124,9 +124,6 @@ void parseParameters(char *parameter, char *mps, char *target,
 
 	strcpy(parameters->lpInputFile, mps);
 	strcpy(parameters->target, target);
-	cudaCheck(
-			cudaMemcpyToSymbol(parametersGPU, parameters, sizeof(Parameters), 0,
-					cudaMemcpyHostToDevice));
 }
 
 void printParameters(Parameters *parameters) {

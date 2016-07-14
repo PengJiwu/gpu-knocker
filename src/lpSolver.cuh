@@ -7,6 +7,9 @@
 
 #include "parameters.cuh"
 
+#include <glpk.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,7 +18,30 @@ extern "C" {
  * Holds all parameters necessary for the linear programming solver.
  */
 typedef struct LPSolver {
-	int dummy;
+	/**
+	 * Copy of fitness in CPU memory.
+	 */
+	float *copyFitness;
+
+	/**
+	 * Copy of population in CPU memory.
+	 */
+	uint32_t *copyPopulation;
+
+	/**
+	 * Parameter for GLPK simplex solver.
+	 */
+	glp_smcp lpParameter;
+
+	/**
+	 * GLPK original problem data.
+	 */
+	glp_prob *lpProblem;
+
+	/**
+	 * GLPK problem data tow work with.
+	 */
+	glp_prob *lpProblemWork;
 } LPSolver;
 
 /**
@@ -34,19 +60,23 @@ LPSolver *createLPSolver(Parameters *parameters);
 void deleteLPSolver(LPSolver *lpSolver);
 
 /**
- * Clears memory for LPSolver.
+ * Evaluates all individuals.
  *
- * @param lpSolver LPSolver to be deleted.
+ * @param population Population.
+ * @param fitness Fitness.
+ * @param lpSolver LPSolver.
+ * @param parameters Parameters.
  */
-void deleteLPSolver(LPSolver *lpSolver);
+void evaluatePopulation(uint32_t *population, float *fitness,
+		LPSolver *lpSolver, Parameters *parameters);
 
 /**
- * Reads and preprocesses the linear programming problem.
+ * Preprocesses the LPSolver. Also copies parameters to GPU.
  *
  * @param lpSolver LPSolver.
  * @param parameters Parameters.
  */
-void preprocessLPProblem(LPSolver *lpSolver, Parameters *parameters);
+void preprocessLPSolver(LPSolver *lpSolver, Parameters *parameters);
 
 #ifdef __cplusplus
 }
