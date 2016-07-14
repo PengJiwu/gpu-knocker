@@ -14,7 +14,7 @@ extern "C" {
  *
  * @param mps File containing the linear programming problem in MPS format.
  * @param target File containing a comma separated list of metabolites to overproduce.
- * @param parameters File containing the parameters. Unspecified parameters will be set to default values.
+ * @param parameter File containing the parameters. Unspecified parameters will be set to default values.
  * @return Returns knockouts and the achieved target values. Needs to be freed.
  */
 char *knock(char *mps, char *target, char *parameter);

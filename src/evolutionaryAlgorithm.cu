@@ -16,7 +16,7 @@ EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters) {
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->fitness,
 					parameters->populationSize * parameters->islandAmount
-							* sizeof(uint32_t)));
+							* sizeof(float)));
 	cudaCheck(
 			cudaMalloc(&evolutionaryAlgorithm->population,
 					parameters->individualSizeInt * parameters->populationSize

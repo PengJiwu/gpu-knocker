@@ -50,9 +50,9 @@ typedef struct EvolutionaryAlgorithm {
 EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters);
 
 /**
- * Clears memory for LPParameters.
+ * Clears memory for EvolutionaryAlgorithm.
  *
- * @param lpParameters LPParameters to be deleted.
+ * @param evolutionaryAlgorithm EvolutionaryAlgorithm to be deleted.
  */
 void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm);
 

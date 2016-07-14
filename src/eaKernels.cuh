@@ -47,7 +47,7 @@ __global__ void crossoverPopulation(uint32_t *population,
  * Initializes population with random data.
  *
  * @param seed Seed for random number generator.
- * @param state State of random number generator to initialize.
+ * @param rngState State of random number generator to initialize.
  */
 __global__ void initializeRNG(uint32_t seed,
 		curandStatePhilox4_32_10 *rngState);
@@ -101,7 +101,8 @@ __device__ void tournamentSelection(uint32_t *population,
  * Creates new individual by uniform crossover.
  *
  * @param population Population.
- * @param temporaryPopulation TemporaryPopulation.
+ * @param island Island.
+ * @param individual Individual.
  * @param rngState RNGState.
  */
 __device__ void uniformCrossover(uint32_t *population, uint32_t island,

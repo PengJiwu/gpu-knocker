@@ -128,12 +128,13 @@ void parseParameters(char *parameter, char *mps, char *target,
 
 void printParameters(Parameters *parameters) {
 	printf(
-			"EAParameters: individualSize=%u individualSizeInt=%u islandAmount=%u iterationAmount=%u migrationInterval=%u migrationSize=%u mutationRate=%f populationSize=%u selectionRate=%f tournamentSize=%u\n",
+			"EAParameters: individualSize=%u individualSizeInt=%u islandAmount=%u iterationAmount=%u migrationInterval=%u migrationSize=%u mutationRate=%f mutationStrength=%d populationSize=%u selectionRate=%f tournamentSize=%u\n",
 			parameters->individualSize, parameters->individualSizeInt,
 			parameters->islandAmount, parameters->iterationAmount,
 			parameters->migrationInterval, parameters->migrationSize,
-			parameters->mutationRate, parameters->populationSize,
-			parameters->selectionRate, parameters->tournamentSize);
+			parameters->mutationRate, parameters->mutationStrength,
+			parameters->populationSize, parameters->selectionRate,
+			parameters->tournamentSize);
 	printf("GeneralParameters: isBenchmark=%d isVerbose=%d\n",
 			parameters->isBenchmark, parameters->isVerbose);
 	printf("GPUParamerters: blockSize=%u gridSize=%u warpSize=%u\n",

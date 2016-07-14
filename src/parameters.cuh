@@ -135,12 +135,12 @@ Parameters *createParameters();
 void deleteParameters(Parameters *parameters);
 
 /**
- * Reads parameters from file.
+ * Reads parameters from file. Doesn't copy the parameters to the GPU.
  *
  * @param parameterFile File to read parameters from.
  * @param mps MPS file to read LP problem from.
  * @param target CSV file to read target from.
- * @param parameter Parameters stored here.
+ * @param parameters Parameters stored here.
  */
 void parseParameters(char *parameterFile, char *mps, char *target,
 		Parameters *parameters);
