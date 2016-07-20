@@ -14,7 +14,7 @@
 inline void __cudaCheck(cudaError err, const char* file, int line) {
 #ifndef NDEBUG
 	if (err != cudaSuccess) {
-		fprintf(stderr, "%s(%d): CUDA error: %s\n", __FILE__, __LINE__,
+		fprintf(stderr, "%s(%d): CUDA error: %s\n", file, line,
 				cudaGetErrorString(err));
 		exit(EXIT_FAILURE);
 	}
