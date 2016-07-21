@@ -55,7 +55,7 @@ char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		// migration after specified interval
 		if ((iteration + 1) % parameters->migrationInterval == 0) {
 			migratePopulation<<<parameters->gridSize, parameters->blockSize,
-					(parameters->migrationSize + 1) * sizeof(uint32_t)>>>(
+					(parameters->migrationSize + 2) * sizeof(uint32_t)>>>(
 					evolutionaryAlgorithm->population,
 					evolutionaryAlgorithm->fitness, statistics->iterationData);
 		}

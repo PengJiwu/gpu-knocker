@@ -57,11 +57,13 @@ __global__ void initializeRNG(uint32_t seed,
 __global__ void migratePopulation(uint32_t *population, float *fitness,
 		float *statistics) {
 	extern __shared__ uint32_t sharedMemory[];
-	uint32_t *amount = &sharedMemory[parametersGPU.migrationSize];
+	uint32_t *amountFound = &sharedMemory[parametersGPU.migrationSize];
+	uint32_t *amountStored = &sharedMemory[parametersGPU.migrationSize + 1];
 	for (uint32_t island = blockIdx.x; island < parametersGPU.islandAmount;
 			island += gridDim.x) {
 		if (threadIdx.x == 0) {
-			*amount = 0;
+			*amountFound = 0;
+			*amountStored = 0xFFFFFFFF;
 		}
 		__syncthreads();
 		uint32_t nextIsland = (island + 1) % parametersGPU.islandAmount;
@@ -71,28 +73,25 @@ __global__ void migratePopulation(uint32_t *population, float *fitness,
 
 		for (uint32_t individual = threadIdx.x;
 				individual < parametersGPU.populationSize
-						&& *amount < parametersGPU.migrationSize; individual +=
-						blockDim.x) {
+						&& *amountFound < parametersGPU.migrationSize;
+				individual += blockDim.x) {
 			if (getFitness(fitness, island, individual)
 					> currentIslandAverage) {
-				uint32_t oldAmount = atomicAdd(amount, 1);
+				uint32_t oldAmount = atomicAdd(amountFound, 1);
 				if (oldAmount < parametersGPU.migrationSize) {
+					atomicAdd(amountStored, 1);
 					sharedMemory[oldAmount] = individual;
 				}
 			}
 		}
 		__syncthreads();
-		if (threadIdx.x == 0) {
-			*amount = 0;
-		}
-		__syncthreads();
 		for (uint32_t individual = threadIdx.x;
 				individual < parametersGPU.populationSize
-						&& *amount < parametersGPU.migrationSize; individual +=
-						blockDim.x) {
+						&& *amountStored < parametersGPU.migrationSize;
+				individual += blockDim.x) {
 			if (getFitness(fitness, nextIsland, individual) < nextIslandAverage
-					&& *amount < parametersGPU.migrationSize) {
-				uint32_t oldAmount = atomicAdd(amount, 1);
+					&& *amountStored < parametersGPU.migrationSize) {
+				uint32_t oldAmount = atomicSub(amountStored, 1);
 				if (oldAmount < parametersGPU.migrationSize) {
 					copyIndividual(population, island, sharedMemory[oldAmount],
 							population, nextIsland, individual);
