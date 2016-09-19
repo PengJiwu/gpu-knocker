@@ -9,7 +9,6 @@
 
 #include "cudaCheck.cuh"
 #include "helperHost.cuh"
-#include "lpKernels.cuh"
 
 LPSolver *createLPSolver(Parameters *parameters) {
 	LPSolver *lpSolver = (LPSolver *) malloc(sizeof(LPSolver));
@@ -41,8 +40,6 @@ void deleteLPSolver(LPSolver *lpSolver) {
 
 void evaluatePopulation(uint32_t *population, float *fitness,
 		LPSolver *lpSolver, Parameters *parameters) {
-	// TODO replace
-	//solveLP<<<parameters->gridSize, parameters->blockSize>>>(population, fitness);
 	cudaCheck(
 			cudaMemcpy(lpSolver->copyPopulation, population,
 					parameters->individualSizeInt * parameters->populationSize
