@@ -35,7 +35,11 @@ void knock(char *mps, char *parameter) {
 	runEvolutionaryAlgorithm(evolutionaryAlgorithm, lpSolver, statistics,
 			parameters);
 	if (parameters->isVerbose) {
-		printStatistics(statistics, parameters);
+		printStatisticsFull(statistics, parameters);
+		printBestKnockouts(lpSolver, statistics, parameters);
+	} else {
+		printStatisticsAggregated(statistics, parameters);
+		printBestKnockout(lpSolver, statistics, parameters);
 	}
 
 	deleteEvolutionaryAlgorithm(evolutionaryAlgorithm);

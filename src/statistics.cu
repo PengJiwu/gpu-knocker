@@ -54,13 +54,10 @@ __global__ void gatherKernel(float *fitness, float *statistics) {
 		for (uint32_t individual = threadIdx.x;
 				individual < parametersGPU.populationSize; individual +=
 						blockDim.x) {
-			if (individual < parametersGPU.populationSize) {
-				float fitnessValue = getFitness(fitness, island, individual);
-				localData[0] = maximum(localData[0], fitnessValue);
-				localData[1] = minimum(localData[1], fitnessValue);
-				localData[2] += fitnessValue
-						/ (float) parametersGPU.populationSize;
-			}
+			float fitnessValue = getFitness(fitness, island, individual);
+			localData[0] = maximum(localData[0], fitnessValue);
+			localData[1] = minimum(localData[1], fitnessValue);
+			localData[2] += fitnessValue / (float) parametersGPU.populationSize;
 		}
 		localData[0] = warpReduceMax(localData[0]);
 		localData[1] = warpReduceMin(localData[1]);
@@ -115,7 +112,27 @@ void gatherStatistics(Statistics *statistics, float *fitness,
 					cudaMemcpyDeviceToHost));
 }
 
-void printStatistics(Statistics *statistics, Parameters *parameters) {
+void printStatisticsAggregated(Statistics *statistics, Parameters *parameters) {
+	for (uint32_t iteration = 0; iteration < parameters->iterationAmount;
+			iteration++) {
+		float max = 0;
+		float min = 0;
+		float average = 0;
+		for (uint32_t island = 0; island < parameters->islandAmount; island++) {
+			max += statistics->data[(iteration * parameters->islandAmount
+					+ island) * 3];
+			min += statistics->data[(iteration * parameters->islandAmount
+					+ island) * 3 + 1];
+			average += statistics->data[(iteration * parameters->islandAmount
+					+ island) * 3 + 2];
+		}
+		printf("%d|%f|%f|%f\n", iteration + 1, max / parameters->islandAmount,
+				min / parameters->islandAmount,
+				average / parameters->islandAmount);
+	}
+}
+
+void printStatisticsFull(Statistics *statistics, Parameters *parameters) {
 	for (uint32_t iteration = 0; iteration < parameters->iterationAmount;
 			iteration++) {
 		printf("iteration %u: (MAX,MIN,AVG)\n", iteration);

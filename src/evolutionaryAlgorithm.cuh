@@ -57,6 +57,37 @@ EvolutionaryAlgorithm *createEvolutionaryAlgorithm(Parameters *parameters);
 void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm);
 
 /**
+ * Print the best knockout with least knockouts.
+ *
+ * @param lpSolver
+ * @param statistics
+ * @param parameters
+ */
+void printBestKnockout(LPSolver* lpSolver, Statistics* statistics,
+		Parameters* parameters);
+
+/**
+ * Prints knockouts with fitness value equal to the islands maximum.
+ *
+ * @param lpSolver LPSolver.
+ * @param statistics Statistics.
+ * @param parameters Parameters.
+ */
+void printBestKnockouts(LPSolver* lpSolver, Statistics* statistics,
+		Parameters* parameters);
+
+/**
+ * Prints knockouts of specified individual.
+ *
+ * @param individual
+ * @param island
+ * @param lpSolver
+ * @param parameters
+ */
+void printKnockout(uint32_t individual, uint32_t island, LPSolver* lpSolver,
+		Parameters* parameters);
+
+/**
  * Starts the evolutionary algorithm.
  *
  * @param evolutionaryAlgorithm EvolutionaryAlgorithm.

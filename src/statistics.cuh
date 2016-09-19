@@ -63,12 +63,20 @@ void gatherStatistics(Statistics *statistics, float *fitness,
 		uint32_t iteration, Parameters *parameters);
 
 /**
- * Prints statistics to console.
+ * Prints statistics aggregated per iteration to console.
  *
  * @param statistics Statistics to print.
  * @param parameters Parameters.
  */
-void printStatistics(Statistics *statistics, Parameters *parameters);
+void printStatisticsAggregated(Statistics *statistics, Parameters *parameters);
+
+/**
+ * Prints all statistics to console.
+ *
+ * @param statistics Statistics to print.
+ * @param parameters Parameters.
+ */
+void printStatisticsFull(Statistics *statistics, Parameters *parameters);
 
 #ifdef __cplusplus
 }

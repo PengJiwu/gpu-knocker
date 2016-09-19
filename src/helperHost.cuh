@@ -12,6 +12,18 @@ extern "C" {
 #endif
 
 /**
+ * Returns fitness value.
+ *
+ * @param fitness Fitness.
+ * @param island Island.
+ * @param individual Individual.
+ * @param parameters Parameters.
+ * @return Fitness value.
+ */
+float getFitnessHost(float *fitness, uint32_t island, uint32_t individual,
+		Parameters *parameters);
+
+/**
  * Returns pointer to specified gene.
  *
  * @param population Population.
@@ -23,6 +35,18 @@ extern "C" {
  */
 uint32_t *getGeneHost(uint32_t *population, uint32_t island,
 		uint32_t individual, uint32_t gene, Parameters *parameters);
+
+/**
+ * Returns number of knockouts.
+ *
+ * @param population
+ * @param island
+ * @param individual
+ * @param parameters
+ * @return
+ */
+uint32_t getNumberKnockoutsHost(uint32_t *population, uint32_t island,
+		uint32_t individual, Parameters *parameters);
 
 /**
  * Sets desired fitness value
