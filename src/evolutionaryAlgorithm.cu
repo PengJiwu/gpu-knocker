@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "cudaCheck.cuh"
 #include "eaKernels.cuh"
@@ -113,7 +114,7 @@ void printKnockout(uint32_t individual, uint32_t island, LPSolver* lpSolver,
 
 void runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters) {
-	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(0,
+	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(time(NULL),
 			evolutionaryAlgorithm->rngState);
 	createPopulation<<<parameters->gridSize, parameters->blockSize>>>(
 			evolutionaryAlgorithm->population, evolutionaryAlgorithm->rngState);
