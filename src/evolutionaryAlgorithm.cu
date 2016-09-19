@@ -117,6 +117,8 @@ void runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 			evolutionaryAlgorithm->rngState);
 	createPopulation<<<parameters->gridSize, parameters->blockSize>>>(
 			evolutionaryAlgorithm->population, evolutionaryAlgorithm->rngState);
+	mutatePopulation<<<parameters->gridSize, parameters->blockSize>>>(
+			evolutionaryAlgorithm->population, evolutionaryAlgorithm->rngState);
 	evaluatePopulation(evolutionaryAlgorithm->population,
 			evolutionaryAlgorithm->fitness, lpSolver, parameters);
 

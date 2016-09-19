@@ -23,7 +23,7 @@ __global__ void createPopulation(uint32_t *population,
 			* parametersGPU.populationSize * parametersGPU.islandAmount;
 	for (uint32_t gene = id; gene < populationSize;
 			gene += blockDim.x * gridDim.x) {
-		population[gene] = curand(&localState);
+		population[gene] = 0xFFFFFFFF;
 	}
 	rngState[id] = localState;
 }
