@@ -35,6 +35,7 @@ void deleteLPSolver(LPSolver *lpSolver) {
 	free(lpSolver->copyPopulation);
 	glp_delete_prob(lpSolver->lpProblem);
 	glp_delete_prob(lpSolver->lpProblemWork);
+	glp_free_env();
 	free(lpSolver);
 }
 

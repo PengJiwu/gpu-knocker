@@ -60,4 +60,5 @@ void knock(char *mps, char *parameter) {
 
 	deleteParameters(parameters);
 
+	cudaDeviceReset();
 }
