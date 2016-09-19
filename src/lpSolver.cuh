@@ -39,7 +39,7 @@ typedef struct LPSolver {
 	glp_prob *lpProblem;
 
 	/**
-	 * GLPK problem data tow work with.
+	 * GLPK problem data for modification.
 	 */
 	glp_prob *lpProblemWork;
 } LPSolver;

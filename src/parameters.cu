@@ -36,7 +36,10 @@ Parameters *createParameters() {
 	parameters->warpSize = 32;
 	// linear programming parameters
 	strcpy(parameters->lpInputFile, "lpProblem.mps");
-	strcpy(parameters->target, "target.csv");
+	parameters->biomass = 0;
+	parameters->product = 0;
+	parameters->substrate = 0;
+	parameters->maintenance = 0;
 
 	cudaCheck(
 			cudaMemcpyToSymbol(parametersGPU, &parameters, sizeof(Parameters),
@@ -49,8 +52,7 @@ void deleteParameters(Parameters *parameters) {
 	free(parameters);
 }
 
-void parseParameters(char *parameter, char *mps, char *target,
-		Parameters *parameters) {
+void parseParameters(char *parameter, char *mps, Parameters *parameters) {
 	FILE *parameterFile;
 
 	parameterFile = fopen(parameter, "r");
@@ -73,7 +75,8 @@ void parseParameters(char *parameter, char *mps, char *target,
 			// evolutionary algorithm parameters
 			if (strcmp(key, "individualSize") == 0) {
 				parameters->individualSize = atoi(value);
-				parameters->individualSizeInt = (parameters->individualSize + 31) / 32;
+				parameters->individualSizeInt =
+						(parameters->individualSize + 31) / 32;
 			} else if (strcmp(key, "islandAmount") == 0) {
 				parameters->islandAmount = atoi(value);
 			} else if (strcmp(key, "iterationAmount") == 0) {
@@ -107,6 +110,16 @@ void parseParameters(char *parameter, char *mps, char *target,
 			} else if (strcmp(key, "warpSize") == 0) {
 				parameters->warpSize = atoi(value);
 			}
+			// linear programming parameters
+			else if (strcmp(key, "biomass") == 0) {
+				parameters->biomass = atoi(value);
+			} else if (strcmp(key, "product") == 0) {
+				parameters->product = atoi(value);
+			} else if (strcmp(key, "substrate") == 0) {
+				parameters->substrate = atoi(value);
+			} else if (strcmp(key, "maintenance") == 0) {
+				parameters->maintenance = atoi(value);
+			}
 			// default
 			else {
 				printf("Unknown key \"%s\" with value \"%s\"was ignored.", key,
@@ -123,7 +136,6 @@ void parseParameters(char *parameter, char *mps, char *target,
 	free(value);
 
 	strcpy(parameters->lpInputFile, mps);
-	strcpy(parameters->target, target);
 }
 
 void printParameters(Parameters *parameters) {
@@ -139,6 +151,8 @@ void printParameters(Parameters *parameters) {
 			parameters->isBenchmark, parameters->isVerbose);
 	printf("GPUParamerters: blockSize=%u gridSize=%u warpSize=%u\n",
 			parameters->blockSize, parameters->gridSize, parameters->warpSize);
-	printf("LPParamerters: lpInputFile=%s target=%s\n", parameters->lpInputFile,
-			parameters->target);
+	printf(
+			"LPParamerters: lpInputFile=%s biomass=%u product=%u substrate=%u maintenance=%u\n",
+			parameters->lpInputFile, parameters->biomass, parameters->product,
+			parameters->substrate, parameters->maintenance);
 }

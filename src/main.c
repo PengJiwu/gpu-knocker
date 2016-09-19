@@ -8,14 +8,15 @@
 #include "gpuKnocker.cuh"
 
 int main(int argc, char *argv[]) {
-	char *mps = "lpProblem.mps";
-	char *target = "target.csv";
-	char *parameter = "parameter.conf";
+	if (argc == 3) {
+		char *mps = argv[1];
+		char *parameter = argv[2];
 
-	char *knockout = knock(mps, target, parameter);
-
-	printf("%s\n", knockout);
-	free(knockout);
+		knock(mps, parameter);
+	} else {
+		printf(
+				"Please provide a MPS and config file like \"gpu-knocker lpProblem.mps parameter.conf\"\n");
+	}
 
 	return EXIT_SUCCESS;
 }

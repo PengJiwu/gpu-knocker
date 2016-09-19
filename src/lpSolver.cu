@@ -49,19 +49,29 @@ void evaluatePopulation(uint32_t *population, float *fitness,
 		for (uint32_t individual = 0; individual < parameters->populationSize;
 				individual++) {
 			glp_copy_prob(lpSolver->lpProblemWork, lpSolver->lpProblem, GLP_ON);
-			for (uint32_t i = 0; i < parameters->individualSize; i++) {
-				uint32_t geneNumber = i / 32;
+			for (uint32_t position = 0; position < parameters->individualSize;
+					position++) {
+				uint32_t geneNumber = position / 32;
 				uint32_t gene = *getGeneHost(lpSolver->copyPopulation, island,
 						individual, geneNumber, parameters);
-				uint32_t bit = (gene >> ((i + 31) % 32)) & 0x00000001;
-				if (bit == 0) {
-					glp_set_col_bnds(lpSolver->lpProblemWork, i + 1, GLP_FX,
-							0.0, 0.0);
+				uint32_t bit = (gene >> ((position + 31) % 32)) & 0x00000001;
+				if (bit == 0 && (position + 1 != parameters->biomass)
+						&& (position + 1 != parameters->product)
+						&& (position + 1 != parameters->substrate)
+						&& (position + 1 != parameters->maintenance)) {
+					glp_set_col_bnds(lpSolver->lpProblemWork, position + 1,
+					GLP_FX, 0.0, 0.0);
 				}
 			}
 			glp_simplex(lpSolver->lpProblemWork, &lpSolver->lpParameter);
+			float fitnessValue = glp_get_col_prim(lpSolver->lpProblemWork,
+					parameters->biomass)
+					* glp_get_col_prim(lpSolver->lpProblemWork,
+							parameters->product)
+					/ glp_get_col_prim(lpSolver->lpProblemWork,
+							parameters->substrate);
 			setFitnessHost(lpSolver->copyFitness, island, individual,
-					glp_get_obj_val(lpSolver->lpProblemWork), parameters);
+					fitnessValue, parameters);
 		}
 	}
 	cudaCheck(

@@ -110,9 +110,24 @@ typedef struct Parameters {
 	char lpInputFile[100];
 
 	/**
-	 * File to read target from. Maximum length is 99 characters.
+	 * Index (one-based) of biomass reaction. Used for calculating the fitness value via BPCY. Prevented from being knocked out.
 	 */
-	char target[100];
+	uint32_t biomass;
+
+	/**
+	 * Index (one-based) of biomass reaction. Used for calculating the fitness value via BPCY. Prevented from being knocked out.
+	 */
+	uint32_t product;
+
+	/**
+	 * Index (one-based) of substrate reaction. Used for calculating the fitness value via BPCY. Prevented from being knocked out.
+	 */
+	uint32_t substrate;
+
+	/**
+	 * Index (one-based) of maintenance reaction. Prevented from being knocked out.
+	 */
+	uint32_t maintenance;
 } Parameters;
 
 /**
@@ -139,11 +154,9 @@ void deleteParameters(Parameters *parameters);
  *
  * @param parameterFile File to read parameters from.
  * @param mps MPS file to read LP problem from.
- * @param target CSV file to read target from.
  * @param parameters Parameters stored here.
  */
-void parseParameters(char *parameterFile, char *mps, char *target,
-		Parameters *parameters);
+void parseParameters(char *parameterFile, char *mps, Parameters *parameters);
 
 /**
  * Prints parameters to console.

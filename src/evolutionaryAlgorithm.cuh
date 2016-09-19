@@ -63,9 +63,8 @@ void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm);
  * @param lpSolver LPSolver.
  * @param parameters Parameters.
  * @param statistics Statistics.
- * @return Returns knockouts and the achieved target values. Needs to be freed.
  */
-char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
+void runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters);
 
 /**

@@ -41,7 +41,7 @@ void deleteEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm) {
 	free(evolutionaryAlgorithm);
 }
 
-char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
+void runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		LPSolver *lpSolver, Statistics *statistics, Parameters *parameters) {
 	initializeRNG<<<parameters->gridSize, parameters->blockSize>>>(0,
 			evolutionaryAlgorithm->rngState);
@@ -81,10 +81,6 @@ char *runEvolutionaryAlgorithm(EvolutionaryAlgorithm *evolutionaryAlgorithm,
 		gatherStatistics(statistics, evolutionaryAlgorithm->fitness, iteration,
 				parameters);
 	}
-
-	char *knockouts = (char *) malloc(18 * sizeof(char));
-	strcpy(knockouts, "42,DUMMY,knockout");
-	return knockouts;
 }
 
 void swapTemporaryPopulation(uint32_t **population,

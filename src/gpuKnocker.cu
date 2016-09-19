@@ -13,10 +13,10 @@
 #include "parameters.cuh"
 #include "statistics.cuh"
 
-char *knock(char *mps, char *target, char *parameter) {
+void knock(char *mps, char *parameter) {
 	Parameters *parameters = createParameters();
 
-	parseParameters(parameter, mps, target, parameters);
+	parseParameters(parameter, mps, parameters);
 
 	cudaEvent_t custart, custop;
 	cudaCheck(cudaEventCreate(&custart));
@@ -32,8 +32,8 @@ char *knock(char *mps, char *target, char *parameter) {
 			parameters);
 	Statistics *statistics = createStatistics(parameters);
 
-	char *knockouts = runEvolutionaryAlgorithm(evolutionaryAlgorithm, lpSolver,
-			statistics, parameters);
+	runEvolutionaryAlgorithm(evolutionaryAlgorithm, lpSolver, statistics,
+			parameters);
 	if (parameters->isVerbose) {
 		printStatistics(statistics, parameters);
 	}
@@ -56,5 +56,4 @@ char *knock(char *mps, char *target, char *parameter) {
 
 	deleteParameters(parameters);
 
-	return knockouts;
 }
